@@ -36,13 +36,13 @@ export const singup = async (req, res) => {
     });
 
     if (newUser) {
-      generateToken(newUser._id, res); // generate token using jwt service and then send the jwt token to client in cookies via res.cookie(). This is why the res is needed here in the first place.
-      await newUser.save(); // save user to db
+      const savedUser = await newUser.save(); // save user to db
+      generateToken(savedUser._id, res); // generate token using jwt service and then send the jwt token to client in cookies via res.cookie(). This is why the res is needed here in the first place.
 
       res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
+        _id: savedUser._id,
+        fullName: savedUser.fullName,
+        email: savedUser.email,
       });
 
       // todo: send a welcome email to user
