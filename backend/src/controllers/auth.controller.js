@@ -44,6 +44,8 @@ export const singup = async (req, res) => {
         fullName: newUser.fullName,
         email: newUser.email,
       });
+
+      // todo: send a welcome email to user
     }
   } catch (error) {
     console.err("Error in singup controller", error.message);
