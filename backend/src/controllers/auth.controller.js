@@ -1,9 +1,13 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import { sender } from "../emails/resend.js";
+import { ENV } from "../lib/env.js";
 
 export const singup = async (req, res) => {
   const { fullName, email, password } = req.body;
+  const clientURL = ENV.CLIENT_URL;
 
   try {
     if (!fullName || !email || !password) {
@@ -46,6 +50,11 @@ export const singup = async (req, res) => {
       });
 
       // todo: send a welcome email to user
+      try {
+        await sendWelcomeEmail(savedUser.email, savedUser.fullName, clientURL);
+      } catch (error) {
+        console.error("Error sending welcome email:", error);
+      }
     }
   } catch (error) {
     console.err("Error in singup controller", error.message);
